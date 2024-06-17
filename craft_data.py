@@ -1,28 +1,52 @@
-# 1 pts / 1 vote, 6 votes = 6 pts
-'./src/snapshot_org.csv'
+from pprint import pprint as pp
+from common import *
 
-# n nft = n pts, no cap
-'./src/Golden BLOBz.csv'
-'./src/Silver BLOBz.csv'
+CONFIG = [
+    # 1 pts / 1 vote, 6 votes = 6 pts
+    ('snapshot_org',        './src/snapshot_org.csv'),
 
-# pts between 1 - 5 base on leaderboard points
-'./src/rar/Galxe leaderboard.csv'
+    # n nft = n pts, no cap
+    ('golden_blobz',        './src/Golden BLOBz.csv'),
+    ('silver_blobz',        './src/Silver BLOBz.csv'),
 
-# max 5 pts per wallet
-'./src/rar/BLOBz x FWX minter_1pt.csv'
+    # pts between 1 - 5 base on leaderboard points
+    ('galxe_leaderboard',   './src/rar/Galxe leaderboard.csv'),
 
-# pts from filename
-'./src/rar/300 Bitcoin Bingo Free Entry_1 pt.csv'
-'./src/rar/BLOBz-QuestN follower_5 pt.csv'
-'./src/rar/Gull Network_1 pt.csv'
-'./src/rar/3,960 $JK Giveaway_1 pt.csv'
-'./src/rar/6,000 $SOMDEJ Giveaway_1 pt.csv'
-'./src/rar/1,000 $LQDX Giveaway_1 pt.csv'
-'./src/rar/100 $OP Giveaway_1 pt.csv'
-'./src/rar/Last_Chance_to_Mint_BLOBz!_1 pt.csv'
-'./src/rar/BLOBz_Invasion__2 pt.csv'
-'./src/rar/Get_Golden_BLOBz_1 pt.csv'
-'./src/rar/BLOBz_FWX_Trading_Contest._1 pt.csv'
+    # max 5 pts per wallet
+    ('blobz_x_fwx',         './src/rar/BLOBz x FWX minter_1pt.csv'),
 
-# play full quest ~ mid score of blobz-bt
-# google sheet for check points
+    # pts from filename
+    ('300_bitcoin',         './src/rar/300 Bitcoin Bingo Free Entry_1 pt.csv'),
+    ('questn',              './src/rar/BLOBz-QuestN follower_5 pt.csv'),
+    ('gull_network',        './src/rar/Gull Network_1 pt.csv'),
+    ('3960_jk',             './src/rar/3,960 $JK Giveaway_1 pt.csv'),
+    ('600_somdej',          './src/rar/6,000 $SOMDEJ Giveaway_1 pt.csv'),
+    ('1000_lqdx',           './src/rar/1,000 $LQDX Giveaway_1 pt.csv'),
+    ('100_op',              './src/rar/100 $OP Giveaway_1 pt.csv'),
+    ('last_change_to_mint', './src/rar/Last_Chance_to_Mint_BLOBz!_1 pt.csv'),
+    ('blobz_invasion',      './src/rar/BLOBz_Invasion__2 pt.csv'),
+    ('get_golder_blobz',    './src/rar/Get_Golden_BLOBz_1 pt.csv'),
+    ('fwx_trading',         './src/rar/BLOBz_FWX_Trading_Contest._1 pt.csv'),
+]
+
+# TODO checksum address before report
+# TODO play full quest ~ mid score of blobz-bt
+# TODO google sheet for check points
+
+chunk = {}
+
+# 1) snapshot_org, golden_blobz, silver_blobz
+for (code, path) in CONFIG[:3]:
+    rr = load_data(path)
+    for r in rr:
+        addr = r['addr']
+        qty  = r['qty']
+        data = chunk.get(addr) or { 'addr': addr }
+        data[code] = qty
+        chunk[addr] = data
+
+# TODO debug remove later
+for c in chunk.values(): print(c)
+
+# 2) galxe leaderboard
+# TODO
