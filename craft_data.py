@@ -1,4 +1,5 @@
 from pprint import pprint as pp
+from collections import Counter
 from common import *
 
 CONFIG = [
@@ -29,24 +30,45 @@ CONFIG = [
     ('fwx_trading',         './src/rar/BLOBz_FWX_Trading_Contest._1 pt.csv'),
 ]
 
-# TODO checksum address before report
-# TODO play full quest ~ mid score of blobz-bt
-# TODO google sheet for check points
-
 chunk = {}
 
 # 1) snapshot_org, golden_blobz, silver_blobz
 for (code, path) in CONFIG[:3]:
     rr = load_data(path)
     for r in rr:
-        addr = r['addr']
-        qty  = r['qty']
-        data = chunk.get(addr) or { 'addr': addr }
-        data[code] = qty
-        chunk[addr] = data
+        add_data(chunk, r['addr'], code, r['qty'])
+
+# 2) galxe leaderboard
+(code, path) = CONFIG[3]
+rr = load_data(path, [['addr', 0], ['qty', 2]], True)
+for r in rr:
+    # calc qty between 1 to 5
+    raw_qty = r['qty']
+    calc_qty = 1
+    if raw_qty > 1165:  calc_qty = 5
+    elif raw_qty > 875: calc_qty = 4
+    elif raw_qty > 585: calc_qty = 3
+    elif raw_qty > 295: calc_qty = 2
+    # update chunk data
+    add_data(chunk, r['addr'], code, calc_qty)
+
+# 3) blobz x fwx
+(code, path) = CONFIG[4]
+addrs = [ o['addr'] for o in load_data(path, [['addr', 0]], True) ]
+addrs = dict(Counter(addrs))
+for (addr, qty) in addrs.items():
+    add_data(chunk, addr, code, min(qty, 5)) # max 5
+
+# 4) others
+for (code, path) in CONFIG[-11:]:
+    qty = int(path.split('_')[-1][0]) # get qty from filename
+    addrs = [ o['addr'] for o in load_data(path, [['addr', 0]], True) ]
+    for addr in addrs:
+        add_data(chunk, addr, code, qty)
 
 # TODO debug remove later
 for c in chunk.values(): print(c)
 
-# 2) galxe leaderboard
-# TODO
+# TODO checksum address before report
+# TODO play full quest ~ mid score of blobz-bt
+# TODO google sheet for check points
