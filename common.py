@@ -21,6 +21,6 @@ def load_data(path, fields=[['addr', 0], ['qty', 1]], skip_header=False):
     return chunk
 
 def add_data(chunk, addr, code, qty):
-    data = chunk.get(addr) or { 'addr': addr }
+    data = chunk.get(addr) or {} #{ 'addr': addr }
     data[code] = qty
     chunk[addr] = data

@@ -67,8 +67,8 @@ for (code, path) in CONFIG[-11:]:
         add_data(chunk, addr, code, qty)
 
 # TODO debug remove later
-for c in chunk.values(): print(c)
+pp(chunk)
 
-# TODO checksum address before report
+# TODO checksum address before report + export in M unit
 # TODO play full quest ~ mid score of blobz-bt
 # TODO google sheet for check points
