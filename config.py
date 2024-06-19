@@ -1,4 +1,4 @@
-REWARD_BLOBZ = 11 * 1_000_000 * 1_000_000 # 11 trillion
+REWARD_BLOBZ = 22 * 1_000_000 * 1_000_000 # 22 trillion
 
 CONFIG = [
     # 1 pts / 1 vote, 6 votes = 6 pts
